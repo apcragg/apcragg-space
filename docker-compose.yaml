@@ -1,0 +1,14 @@
+services:
+  # Standup Nginx webserver
+  webserver:
+    build: ./webserver
+    ports:
+      - 9043:80
+      - 9044:443
+  # Standup Python webserver layer
+
+  # Start Flask API layer
+
+  # Start Temperature Service
+
+  # Start PlutoSDR Service

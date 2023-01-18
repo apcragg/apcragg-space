@@ -1,0 +1,5 @@
+flask==2.2.2
+wheel==0.38.4
+uwsgi==2.0.21
+werkzeug==2.2.2
+numpy==1.24.1

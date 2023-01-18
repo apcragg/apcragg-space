@@ -1,0 +1,33 @@
+{
+    "python.defaultInterpreterPath": "venv/bin/python",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=88"
+    ],
+    "isort.args": [
+        "--profile",
+        "black",
+        "--force-single-line-imports",
+        "--force-alphabetical-sort-within-sections",
+        "--single-line-exclusions",
+        "typing",
+        "--use-parentheses",
+        "-p",
+        "flask_app",
+        "-p",
+        "services",
+        "-p",
+        "webserver"
+    ],
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true,
+}

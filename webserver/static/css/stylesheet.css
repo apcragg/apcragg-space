@@ -1,0 +1,52 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+      background: #2C3333;
+      color: #ddd;
+      --bg-color: #2C3333;
+      --text-color: #ddd;
+      --em-color: #A5C9CA;
+    }
+  }
+  
+@media (prefers-color-scheme: light) {
+    :root {
+        background: #E7F6F2;
+        color: #222;
+        --bg-color: #E7F6F2;
+        --text-color: #222;
+        --em-color: #395B64;
+    }
+}
+
+div {
+    padding-top: min(5%, 25px);
+    padding-right: min(10%, 50px);
+    padding-bottom: 20%;
+    padding-left: min(10%, 50px);
+  }
+
+ascii {
+    white-space: pre-line;
+    white-space: pre-wrap;
+    font-family: monospace, monospace;
+}
+
+temp {
+    font-weight: bold;
+    color: var(--em-color);
+}
+
+rbp_g {
+    color: green;
+    font-weight: bold;
+}
+
+rbp_r {
+    color: red;
+    font-weight: bold;
+}
+
+time {
+    color: var(--em-color);
+    font-weight: bold;
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=Andrew's Web Server
+After=network.target
+
+[Service]
+ExecStart=/home/apcragg/devel/apcragg-space/venv/bin/uwsgi --ini uwsgi.ini
+WorkingDirectory=/home/apcragg/devel/apcragg-space
+Environment="PATH=/home/apcragg/devel/apcragg-space/venv/bin"
+Restart=always
+User=apcragg
+
+[Install]
+WantedBy=multi-user.target
