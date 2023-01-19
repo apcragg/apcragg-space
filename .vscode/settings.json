@@ -23,11 +23,18 @@
         "webserver"
     ],
     "python.formatting.provider": "black",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+    "[python]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.formatOnSave": true
     },
     "files.trimTrailingWhitespace": true,
     "files.trimFinalNewlines": true,
     "files.insertFinalNewline": true,
+    "typescript.format.enable": false,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": false,
+        "source.sortImports": true
+    },
+    "shellcheck.customArgs": ["-x"],
 }

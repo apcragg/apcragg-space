@@ -7,7 +7,7 @@
       --em-color: #A5C9CA;
     }
   }
-  
+
 @media (prefers-color-scheme: light) {
     :root {
         background: #E7F6F2;
@@ -49,4 +49,13 @@ rbp_r {
 time {
     color: var(--em-color);
     font-weight: bold;
+}
+
+#plot {
+    height: 100px;
+    width: 30%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: auto;
 }

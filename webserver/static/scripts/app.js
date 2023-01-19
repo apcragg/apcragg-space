@@ -1,3 +1,5 @@
+import { load_plot } from './plot.js';
+
 function date(){
     const d = new Date();
     let time = d.toLocaleString("en-US", {timeZoneName: 'short'})
@@ -43,4 +45,7 @@ async function run(){
     }
 }
 
+
+
 run();
+load_plot();

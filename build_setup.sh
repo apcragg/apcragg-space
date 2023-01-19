@@ -12,11 +12,17 @@ LINUX_PACKAGES+=" build-essential clang-format libusb-dev cmake libtool automake
 # Get important python packages
 LINUX_PACKAGES+=" python3 python3-pip python3-venv python3-tk"
 LINUX_PACKAGES+=" python3-protobuf"
-# Docker prerequisites 
+# Docker prerequisites
 LINUX_PACKAGES+=" apt-transport-https ca-certificates curl software-properties-common"
 
+# Snap package, gross, thanks Canonical
+CERTBOT_PACKAGE="certbot"
+
 # PIP Packages
-PIP3_PACKAGES="coloredlogs"
+PIP3_PACKAGES=""
+
+# Node Version
+NODE_VERSION="v18.13.0"
 
 echo_em() {
   if [ -z "$2" ] ; then
@@ -24,16 +30,16 @@ echo_em() {
   else
     CHAR=$2
   fi
-  for i in {1..80}; do echo -n $CHAR; done
+  printf -- "$CHAR%.0s" {1..80}
   echo ""
-  echo $1
-  for i in {1..80}; do echo -n $CHAR; done
+  echo "$1"
+  printf -- "$CHAR%.0s" {1..80}
   echo ""
 }
 
 linux_check_if_all_packages_installed() {
   local pkg
-  for pkg in $@; do
+  for pkg in "$@"; do
     if ! dpkg -s "$pkg" >/dev/null 2>/dev/null; then
       echo "$pkg not installed"
       return 1
@@ -41,6 +47,18 @@ linux_check_if_all_packages_installed() {
   done
   return 0
 }
+
+snap_check_if_all_packages_installed() {
+  local pkg
+  for pkg in "$@"; do
+    if ! snap list | tail +2 | grep -Eo "^[^ ]+" | grep -q "$pkg" >/dev/null 2>/dev/null; then
+      echo "$pkg not installed"
+      return 1
+    fi
+  done
+  return 0
+}
+
 
 # Verify docker install by running example image
 docker_check() {
@@ -50,14 +68,14 @@ docker_check() {
   fi
 
   if ! run_sudo docker run hello-world | grep "Hello from Docker!" >/dev/null 2>/dev/null; then
-      echo "Docker not configbured properly."
+      echo "Docker not configured properly."
       exit 1
   fi
 }
 
 # Setup docker permissions
 setup_sudoless_docker() {
-  run_sudo usermod -aG docker ${USER}
+  run_sudo usermod -aG docker "${USER}"
 }
 
 install_pip_pkgs() {
@@ -65,7 +83,9 @@ install_pip_pkgs() {
     echo_em "Please deactive virtual environment before running this script."
     exit 1
   fi
-  pip3 install --quiet --user ${PIP3_PACKAGES}
+  if [[ ${#PIP3_PACKAGES} -gt 0 ]]; then
+    pip3 install --quiet --user "${PIP3_PACKAGES}"
+  fi
 }
 
 install_nginx() {
@@ -73,7 +93,7 @@ install_nginx() {
  if linux_check_if_all_packages_installed $NGINX_PKG; then
   echo_em "Nginx already installed"
  else
- run_sudo apt-get install --yes $NGINX_PKG 
+ run_sudo apt-get install --yes $NGINX_PKG
  fi
 }
 
@@ -96,16 +116,35 @@ install_docker() {
     run_sudo apt-get install $DOCKER_PKG --yes
     # Instlal docker compose plugin
     run_sudo apt-get install --yes docker-compose-plugin
+    docker_check
   fi
-  docker_check  
+
 
   if id -nG "$USER" | grep -qw "$GROUP"; then
     :
   else
-    echo $USER does not belong to $GROUP
+    echo "$USER" does not belong to $GROUP
     setup_sudoless_docker
   fi
   echo_em "Docker is setup correctly"
+}
+
+install_node() {
+  # Get node version mananger
+  if  ! test -d "$HOME/.nvm/"; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+  fi
+  source "$HOME/.nvm/nvm.sh"
+  source "$HOME/.profile"
+  source "$HOME/.bashrc"
+  if ! command -v npm >/dev/null; then
+    echo_em "Installing Node.js"
+    nvm install "$NODE_VERSION"
+    npm update -g npm
+    exit
+  else
+    echo_em "Node.js already installed"
+  fi
 }
 
 # Checks that we are not running as root.
@@ -127,16 +166,24 @@ verify_not_venv() {
 
 # Wrapper for running functions as sudo
 run_sudo() {
-  echo "Running: $@"
+  echo "Running: $*"
   sudo "$@"
 }
 
 install_linux() {
-  if linux_check_if_all_packages_installed $LINUX_PACKAGES; then
+  if linux_check_if_all_packages_installed "$LINUX_PACKAGES"; then
     echo_em "All Linux packages already installed"
   else
     run_sudo apt-get update
-    run_sudo ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
+    run_sudo ACCEPT_EULA=Y apt-get --yes install "$LINUX_PACKAGES"
+  fi
+}
+
+install_certbot() {
+  if snap_check_if_all_packages_installed $CERTBOT_PACKAGE; then
+    echo_em "certbot is already installed"
+  else
+    run_sudo snap install $CERTBOT_PACKAGE --classic
   fi
 }
 
@@ -144,6 +191,8 @@ install_linux() {
 verify_not_root
 verify_not_venv
 install_linux
+install_certbot
 install_pip_pkgs
 install_docker
 install_nginx
+install_node

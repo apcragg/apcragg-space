@@ -3,11 +3,15 @@ services:
   webserver:
     build: ./webserver
     ports:
-      - 9043:80
-      - 9044:443
+      - 9043:9043
+      - 10043:10043
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt/:ro
   # Standup Python webserver layer
-
-  # Start Flask API layer
+  flask_app:
+    build: ./flask_app
+    ports:
+      - 9044
 
   # Start Temperature Service
 

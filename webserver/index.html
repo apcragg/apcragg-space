@@ -5,14 +5,14 @@
     <link rel="icon" href="/static/resources/favicon.png">
     <link rel="stylesheet" href="/static/css/stylesheet.css">
     <title>Andrew's Page</title>
-    <script src="/static/scripts/app.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/sigplot/dist/sigplot-debug.js"></script>
 </head>
 
 <body class="bg">
     <div>
     <h1>Hey Benie!</h1>
     <ascii><rbp_g>         .~~.   .~~.
-        '. \ ' ' / .' </rbp_g> <rbp_r>     
+        '. \ ' ' / .' </rbp_g> <rbp_r>
          .~ .~~~..~.
         : .~.'~'.~. :
        ~ (   ) (   ) ~
@@ -29,6 +29,11 @@
     <p>CPU Usage is: <temp id="rpi_usage">   </temp><temp>%</temp></p>
     <p>Local Time is:    <time id="local_t"></temp></p>
     <p>Mountain Time is: <time id="mt_t"></temp></p>
+
+    <h1>Plotting</h1>
+    <div id="plot">
     </div>
+    </div>
+    <script type='module' src="/static/scripts/app.js"> </script>
 </body>
 </html>
