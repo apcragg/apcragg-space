@@ -32,7 +32,7 @@ async function get_temp(){
     return data['temp0'];
 }
 
-async function run(){
+export async function run_app(){
     while(true){
         let data = await get_temp()
         setElementString('rpi_t', data)
@@ -42,8 +42,3 @@ async function run(){
         await sleep(500);
     }
 }
-
-
-
-run();
-load_plot();
