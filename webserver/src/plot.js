@@ -1,4 +1,4 @@
-export function load_plot() {
+function load_plot() {
     var plot = new sigplot.Plot(document.getElementById("plot"), {});
     var data = [];
     var npts = 1024;
