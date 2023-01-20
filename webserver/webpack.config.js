@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const path = require("path")
 
 module.exports = {
-    mode: "development",
+    mode: "production",
     entry: "./src/index.js",
     output: {
         filename: "main.[contenthash].js",
@@ -11,7 +11,11 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./static/templates/index_template.html"
+            template: "./static/templates/index_template.html",
+            minify: {
+                collapseWhitespace: false,
+                preserveLineBreaks: true,
+            },
         })
     ],
     module: {
