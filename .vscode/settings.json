@@ -36,5 +36,14 @@
         "source.organizeImports": false,
         "source.sortImports": true
     },
-    "shellcheck.customArgs": ["-x"],
+    "shellcheck.customArgs": [
+        "-x"
+    ],
+    "python.autoComplete.extraPaths": [
+        "/usr/local/lib/python3.10/dist-packages/"
+    ],
+    "python.analysis.extraPaths": [
+        "/usr/local/lib/python3.10/dist-packages/"
+    ],
+
 }

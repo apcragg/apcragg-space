@@ -1,10 +1,8 @@
 FROM python:3.10
 
-ENV PIP_ROOT_USER_ACTION=ignore
-
 RUN apt-get update && \
-    apt-get install gcc libpcre3 libpcre3-dev --yes && \
-    pip install uWSGI flask redis numpy Werkzeug
+    apt-get install gcc libpcre3 libpcre3-dev iputils-ping --yes && \
+    pip install uWSGI flask redis numpy Werkzeug scipy
 
 COPY *.py /app/
 COPY uwsgi.ini /app/

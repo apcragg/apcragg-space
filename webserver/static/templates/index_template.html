@@ -2,14 +2,13 @@
 <meta charset="utf-8">
 <html>
 <head>
-    <link rel="icon" href="/static/resources/favicon.png">
     <title>Andrew's Page</title>
     <script src="https://cdn.jsdelivr.net/npm/sigplot/dist/sigplot-debug.js"></script>
 </head>
 
 <body class="bg">
     <div>
-    <h1>Hey Benie!</h1>
+    <h1>Running on a Raspberry Pi 4</h1>
     <ascii><rbp_g>         .~~.   .~~.
         '. \ ' ' / .' </rbp_g> <rbp_r>
          .~ .~~~..~.
@@ -20,17 +19,24 @@
         (  : '~' :  )
          '~ .~~~. ~'
              '~'</rbp_r></ascii>
-    <p>
-        I am no longer a cow; I am a raspberry.
-    </p>
     <h1>Data</h1>
-    <p>CPU Temperature is: <temp id="rpi_t"></temp><temp>&#xb0;C</temp></p>
+    <p>CPU Temperature is: <temp id="rpi_t"></temp><temp>&#xb0;C</temp> (this is currently a random number generator)</p>
     <p>CPU Usage is: <temp id="rpi_usage">   </temp><temp>%</temp></p>
     <p>Local Time is:    <time id="local_t"></temp></p>
     <p>Mountain Time is: <time id="mt_t"></temp></p>
 
     <h1>Plotting</h1>
-    <div id="plot">
+    <div id="container">
+        <div id="row1">
+          <div id="plot1"></div>
+          <div id="plot2"></div>
+          <div id="plot3"></div>
+        </div>
+        <div id="row2">
+          <div id="plot4"></div>
+          <div id="plot5"></div>
+          <div id="plot6"></div>
+        </div>
     </div>
     </div>
 </body>

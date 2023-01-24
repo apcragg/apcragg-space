@@ -7,12 +7,27 @@ services:
       - 10043:10043
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt/:ro
+      - ./webserver/dist:/usr/share/nginx/apcragg-space:ro
   # Standup Python webserver layer
   flask_app:
     build: ./flask_app
     ports:
       - 9044
 
-  # Start Temperature Service
+  # Start CPU Service
+  cpu-usage:
+    build: ./services/cpu-usage
+    depends_on:
+      redis:
+        condition: service_started
+
 
   # Start PlutoSDR Service
+  pluto:
+    build: ./services/pluto
+    devices:
+      - /dev/bus/usb/001/003
+
+  # Start Reids
+  redis:
+    build: ./redis

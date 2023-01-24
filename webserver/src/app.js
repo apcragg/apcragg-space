@@ -1,3 +1,5 @@
+import { sleep_ms } from './utils';
+
 function date(){
     const d = new Date();
     let time = d.toLocaleString("en-US", {timeZoneName: 'short'})
@@ -14,10 +16,6 @@ setInterval(date, 100);
 function setElementString(id, str){
     let element = document.getElementById(id);
     element.innerHTML = str
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function get_usage(){
@@ -39,6 +37,6 @@ export async function run_app(){
 
         data = await get_usage()
         setElementString('rpi_usage', data)
-        await sleep(500);
+        await sleep_ms(500);
     }
 }

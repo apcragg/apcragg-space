@@ -1,9 +1,9 @@
-const { NONAME } = require("dns")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const path = require("path")
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     entry: "./src/index.js",
     output: {
         filename: "main.[contenthash].js",
@@ -12,11 +12,13 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./static/templates/index_template.html",
+            favicon: "./static/resources/space.png",
             minify: {
                 collapseWhitespace: false,
                 preserveLineBreaks: true,
             },
-        })
+        }),
+        new CleanWebpackPlugin({}),
     ],
     module: {
         rules: [
@@ -24,7 +26,21 @@ module.exports = {
                 test: /\.css$/,
                 // Loads in reverse order, need to load css first
                 use: ["style-loader", "css-loader"],
-            }
+            },
+            {
+                test: /\.html$/,
+                loader: 'html-loader',
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: "[name].[hash].[ext]",
+                        outputPath: "imgs"
+                    }
+                }
+            },
         ]
     }
 }

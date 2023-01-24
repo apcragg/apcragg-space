@@ -14,6 +14,8 @@ LINUX_PACKAGES+=" python3 python3-pip python3-venv python3-tk"
 LINUX_PACKAGES+=" python3-protobuf"
 # Docker prerequisites
 LINUX_PACKAGES+=" apt-transport-https ca-certificates curl software-properties-common"
+# PlutoSDR Driver requirements
+LINUX_PACKAGES+=" libiio-dev libiio-utils libad9361-dev"
 
 # Snap package, gross, thanks Canonical
 CERTBOT_PACKAGE="certbot"
@@ -50,7 +52,7 @@ linux_check_if_all_packages_installed() {
 
 snap_check_if_all_packages_installed() {
   local pkg
-  for pkg in "$@"; do
+  for pkg in $@; do
     if ! snap list | tail +2 | grep -Eo "^[^ ]+" | grep -q "$pkg" >/dev/null 2>/dev/null; then
       echo "$pkg not installed"
       return 1
@@ -171,11 +173,11 @@ run_sudo() {
 }
 
 install_linux() {
-  if linux_check_if_all_packages_installed "$LINUX_PACKAGES"; then
+  if linux_check_if_all_packages_installed $LINUX_PACKAGES; then
     echo_em "All Linux packages already installed"
   else
     run_sudo apt-get update
-    run_sudo ACCEPT_EULA=Y apt-get --yes install "$LINUX_PACKAGES"
+    run_sudo ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
   fi
 }
 

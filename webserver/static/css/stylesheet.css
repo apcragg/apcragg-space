@@ -51,11 +51,72 @@ time {
     font-weight: bold;
 }
 
-#plot {
-    height: 100px;
-    width: 30%;
+#container {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    width: auto;
+}
+#row1 {
+    flex: 1;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     padding-left: 0;
     padding-right: 0;
-    margin-left: 0;
-    margin-right: auto;
+    display: flex;
+
+}
+#row2 {
+    flex: 1;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+}
+#plot1 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
+}
+#plot2 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
+ }
+#plot3 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
+}
+#plot4 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
+}
+#plot5 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
+}
+#plot6 {
+    flex: 1;
+    max-width: 500vw;
+    height: 40vh;
+    margin: 0;
+    padding: 0;
 }

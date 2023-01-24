@@ -3,3 +3,9 @@ wheel==0.38.4
 uwsgi==2.0.21
 werkzeug==2.2.2
 numpy==1.24.1
+redis==4.4.2
+psutil==5.9.4
+pylibiio==0.23.1
+pyadi-iio==0.0.14
+matplotlib==3.6.3
+scipy==1.10.0
