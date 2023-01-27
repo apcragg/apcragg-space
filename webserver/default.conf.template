@@ -1,17 +1,17 @@
 server {
-	listen 9043;
-	server_name apcragg.space;
+	listen $NGINX_LISTEN_PORT;
+	server_name $NGINX_HOSTNAME;
 
 	location ^~ /.well-known/acme-challenge/ {
 		root /etc/nginx/ssl/bot;
 	}
 
-	return 301 https://apcragg.space$request_uri;
+	return 301 https://${NGINX_HOSTNAME}$request_uri;
 }
 
 server {
-	access_log  /var/log/nginx/apcragg-space.access.log;
-	root /usr/share/nginx/apcragg-space;
+	access_log  /var/log/nginx/default.access.log;
+	root /usr/share/nginx/default;
 
 	location ^~ /static/ {
 		include /etc/nginx/mime.types;
@@ -25,14 +25,14 @@ server {
 	}
 
 	location @proxy {
-		proxy_pass http://flask_app:9044;
+		proxy_pass http://flask_app:$FLASK_BACKEND_PORT;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Forwarded-Proto $scheme;
 		proxy_set_header X-Forwarded-Host $host;
 		proxy_set_header X-Forwarded-Prefix /;
 	}
 
-	listen 10043 ssl; # managed by Certbot
+	listen $NGINX_LISTEN_PORT_TLS ssl; # managed by Certbot
 	ssl_certificate /etc/letsencrypt/live/apcragg.space/fullchain.pem; # managed by Certbot
 	ssl_certificate_key /etc/letsencrypt/live/apcragg.space/privkey.pem; # managed by Certbot
 	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot

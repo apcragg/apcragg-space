@@ -30,12 +30,6 @@ ascii {
     white-space: pre-wrap;
     font-family: monospace, monospace;
 }
-
-temp {
-    font-weight: bold;
-    color: var(--em-color);
-}
-
 rbp_g {
     color: green;
     font-weight: bold;
@@ -51,7 +45,7 @@ time {
     font-weight: bold;
 }
 
-#container {
+#plot_table {
     display: flex;
     flex-direction: column;
     background-color: black;

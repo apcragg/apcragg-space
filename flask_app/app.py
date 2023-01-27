@@ -2,35 +2,43 @@ import flask
 import numpy as np
 from scipy import signal
 from werkzeug.middleware import proxy_fix
-from flask import request
+from flask import request, g
 import redis
+from dotenv import load_dotenv
 import pickle
+import os
 
+REDIS_PORT_DEFAULT = 6379
+
+load_dotenv()
 app = flask.Flask(__name__)
 
+# I don't really understand this but the getting started guide recommended it
 app.wsgi_app = proxy_fix.ProxyFix(
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
 
-r = redis.Redis(host="redis", port=6379, db=0)
+
+def get_redis() -> redis.Redis:
+    """Returns Redis database connection object"""
+    if "r" not in g:
+        g.r = redis.Redis(
+            host="redis",
+            port=int(os.environ.get("REDIS_PORT", REDIS_PORT_DEFAULT)),
+            db=0,
+        )
+    return g.r
 
 
 @app.route("/api/cpu/usage/", methods=["GET"])
 def get_cpu_usage() -> flask.Response:
     """Returns CPU usage as percentage"""
-    usage = pickle.loads(r.get("usage"))["value"]
-    return flask.jsonify({"usage": f"{usage:4.1f}"})
-
-
-@app.route("/api/cpu/temp/", methods=["GET"])
-def get_cpu_temp() -> flask.Response:
-    """Returns temperature in celsius of CPU"""
-    # with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
-    #     temp_mdeg = float(f.readline())
-    #     temp = np.round(temp_mdeg / 1e3, 1)
-    temp = np.random.normal() * 5 + 20
-
-    return flask.jsonify({"temp0": f"{temp:.1f}"})
+    usage_buffer = get_redis().get("usage")
+    if usage_buffer:
+        usage = pickle.loads(usage_buffer)["value"]
+        return flask.jsonify({"usage": f"{usage:4.1f}"})
+    else:
+        return flask.jsonify({"usage": None})
 
 
 @app.route("/api/sdr/spectrum/", methods=["GET"])
@@ -41,10 +49,25 @@ def get_sdr_spectrum() -> flask.Response:
     return flask.jsonify({"spectrum": data})
 
 
+@app.route("/api/sdr/capture_time/", methods=["GET"])
+def get_capture_time() -> flask.Response:
+    """Returns SDR Spectrum as a list of magnitudes"""
+    data_buffer = get_redis().get("capture_time")
+    if data_buffer:
+        data = pickle.loads(data_buffer)["value"]
+        return flask.jsonify({"capture_t": data})
+    else:
+        return flask.jsonify({"capture_t": None})
+
+
 @app.route("/", methods=["GET", "POST"])
 def hello():
     """Unused root route. nginx serves this route instead"""
-    return "<h1 style='color:blue'>Hello There!</h1>"
+    return (
+        "<h1 style='color:blue'>Hello There! If you're seeing this,"
+        "the nginx proxy is not properly configured to serve the static"
+        "folder.</h1>"
+    )
 
 
 @app.route("/codenames/api/", methods=["GET", "POST"])
@@ -55,13 +78,13 @@ def codenames():
 def get_pluto_spectrum(n):
     spectrum = []
 
-    data = pickle.loads(r.get("spectrum"))["value"]
+    data = pickle.loads(get_redis().get("spectrum"))["value"]
     _, data = 10 * np.log10(
         signal.welch(data, window=np.hamming(512).tolist(), detrend=False)
     )
     data: np.ndarray = np.fft.fftshift(data)
 
-    data_low = pickle.loads(r.get("spectrum_low"))["value"]
+    data_low = pickle.loads(get_redis().get("spectrum_low"))["value"]
     _, data_low = 10 * np.log10(
         signal.welch(data_low, window=np.hamming(512).tolist(), detrend=False)
     )

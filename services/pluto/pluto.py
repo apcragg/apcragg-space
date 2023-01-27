@@ -2,6 +2,8 @@ import adi
 import numpy as np
 import redis
 import pickle
+from typing import List, Optional
+import time
 
 N_THREADS = 1
 
@@ -13,6 +15,13 @@ def find_sdr():
 def setup_sdr(uri: str):
     sdr = adi.Pluto(uri=uri)
     return sdr
+
+
+def capture(sdr: adi.Pluto, freq: Optional[float] = None):
+    if freq:
+        sdr.rx_lo = int(freq)
+    data = sdr.rx() / (2**12)
+    return data
 
 
 def main():
@@ -28,14 +37,13 @@ def main():
     r = redis.Redis(host="redis", port=6379, db=0)
 
     while True:
-        sdr.rx_lo = int(751e6)
-        data = sdr.rx() / (2**12)
-        spectrum = data
+        t_start = time.time()
+        spectrum = capture(sdr, 751e6)
         r.set("spectrum", pickle.dumps({"value": spectrum}))
+        t_elapsed = time.time() - t_start
+        r.set("capture_time", pickle.dumps({"value": t_elapsed}))
 
-        sdr.rx_lo = int(433e6)
-        data = sdr.rx() / (2**12)
-        spectrum = data
+        spectrum = capture(sdr, 433e6)
         r.set("spectrum_low", pickle.dumps({"value": spectrum}))
 
 

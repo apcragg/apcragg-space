@@ -3,16 +3,25 @@ services:
   webserver:
     build: ./webserver
     ports:
-      - 9043:9043
-      - 10043:10043
+      - $NGINX_LISTEN_PORT:$NGINX_BACKEND_PORT
+      - $NGINX_LISTEN_PORT_TLS:$NGINX_BACKEND_PORT_TLS
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt/:ro
       - ./webserver/dist:/usr/share/nginx/apcragg-space:ro
+    # Passed in at run time
+    env_file:
+      - .env
+
   # Standup Python webserver layer
   flask_app:
     build: ./flask_app
+    depends_on:
+      redis:
+        condition: service_started
     ports:
-      - 9044
+      - $NGINX_BACKEND_PORT_TLS
+    env_file:
+      - .env
 
   # Start CPU Service
   cpu-usage:
@@ -20,14 +29,24 @@ services:
     depends_on:
       redis:
         condition: service_started
-
+    # Passed in at run time
+    env_file:
+      - .env
 
   # Start PlutoSDR Service
   pluto:
     build: ./services/pluto
     devices:
-      - /dev/bus/usb/001/003
+      - /dev/bus/usb/ # TODO: Should we template this and find only the device we need?
+    # Passed in at run time
+    env_file:
+      - .env
+    environment:
+      - PLUTO_URI=$PLUTO_URI
 
   # Start Reids
   redis:
     build: ./redis
+    # Passed in at run time
+    env_file:
+      - .env

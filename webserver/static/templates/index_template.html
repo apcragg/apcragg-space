@@ -7,7 +7,7 @@
 </head>
 
 <body class="bg">
-    <div>
+    <div class="container">
     <h1>Running on a Raspberry Pi 4</h1>
     <ascii><rbp_g>         .~~.   .~~.
         '. \ ' ' / .' </rbp_g> <rbp_r>
@@ -20,13 +20,16 @@
          '~ .~~~. ~'
              '~'</rbp_r></ascii>
     <h1>Data</h1>
-    <p>CPU Temperature is: <temp id="rpi_t"></temp><temp>&#xb0;C</temp> (this is currently a random number generator)</p>
-    <p>CPU Usage is: <temp id="rpi_usage">   </temp><temp>%</temp></p>
-    <p>Local Time is:    <time id="local_t"></temp></p>
-    <p>Mountain Time is: <time id="mt_t"></temp></p>
+    <p>SDR Capture Time:   <time id="capture_t"></time> <time>ms</time></p>
+    <p>CPU Usage is:       <temp id="rpi_usage">   </temp><temp>%</temp></p>
+    <p>Local Time is:      <time id="local_t"></temp></p>
+    <p>Mountain Time is:   <time id="mt_t"></temp></p>
+
+    <button class="btn btn-primary">Primary button</button>
+    <p></p>
 
     <h1>Plotting</h1>
-    <div id="container">
+    <div id="plot_table">
         <div id="row1">
           <div id="plot1"></div>
           <div id="plot2"></div>

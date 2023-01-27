@@ -24,19 +24,20 @@ async function get_usage(){
     return data['usage'];
 }
 
-async function get_temp(){
-    const response = await fetch('/api/cpu/temp');
+async function get_capture_time(){
+    const response = await fetch('/api/sdr/capture_time');
     const data = await response.json();
-    return data['temp0'];
+    const t_ms = Math.round(data['capture_t'] * 1e4) / 10;
+    return t_ms;
 }
 
 export async function run_app(){
     while(true){
-        let data = await get_temp()
-        setElementString('rpi_t', data)
-
         data = await get_usage()
         setElementString('rpi_usage', data)
+
+        data = await get_capture_time()
+        setElementString('capture_t', data)
         await sleep_ms(500);
     }
 }
