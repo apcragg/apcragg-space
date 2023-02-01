@@ -2,18 +2,8 @@ server {
 	listen $NGINX_LISTEN_PORT;
 	server_name $NGINX_HOSTNAME;
 
-	location ^~ /.well-known/acme-challenge/ {
-		root /etc/nginx/ssl/bot;
-	}
-
-	return 301 https://${NGINX_HOSTNAME}$request_uri;
-}
-
-server {
 	access_log  /var/log/nginx/default.access.log;
 	root /usr/share/nginx/default;
-
-	server_name $NGINX_HOSTNAME;
 
 	location ^~ /static/ {
 		include /etc/nginx/mime.types;
@@ -33,11 +23,4 @@ server {
 		proxy_set_header X-Forwarded-Host $host;
 		proxy_set_header X-Forwarded-Prefix /;
 	}
-
-	listen $NGINX_LISTEN_PORT_TLS ssl; # managed by Certbot
-	ssl_certificate /ssl/$NGINX_HOSTNAME.crt; # managed by Certbot
-	ssl_certificate_key /ssl/$NGINX_HOSTNAME.key; # managed by Certbot
-	include /ssl/options-ssl-nginx.conf; # managed by Certbot
-	ssl_dhparam /ssl/$NGINX_HOSTNAME.dhparam.pem; # managed by Certbot
-
 }

@@ -10,3 +10,7 @@ dist
 
 # SSL keys
 webserver/ssl/*.pem
+webserver/ssl/*.key
+webserver/ssl/*.crt
+webserver/ssl/*.ext
+webserver/ssl/*.csr
