@@ -7,3 +7,6 @@ node_modules
 logs
 .npm
 dist
+
+# SSL keys
+webserver/ssl/*.pem

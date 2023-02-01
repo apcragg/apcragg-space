@@ -33,9 +33,9 @@ server {
 	}
 
 	listen $NGINX_LISTEN_PORT_TLS ssl; # managed by Certbot
-	ssl_certificate /etc/letsencrypt/live/apcragg.space/fullchain.pem; # managed by Certbot
-	ssl_certificate_key /etc/letsencrypt/live/apcragg.space/privkey.pem; # managed by Certbot
-	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+	ssl_certificate /ssl/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /ssl/privkey.pem; # managed by Certbot
+	include /ssl/options-ssl-nginx.conf; # managed by Certbot
+	ssl_dhparam /ssl/dhparam.pem; # managed by Certbot
 
 }

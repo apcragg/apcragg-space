@@ -2,15 +2,23 @@ services:
   # Standup Nginx webserver
   webserver:
     build: ./webserver
+    depends_on:
+      flask_app:
+        condition: service_started
     ports:
       - $NGINX_LISTEN_PORT:$NGINX_BACKEND_PORT
       - $NGINX_LISTEN_PORT_TLS:$NGINX_BACKEND_PORT_TLS
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt/:ro
       - ./webserver/dist:/usr/share/nginx/apcragg-space:ro
     # Passed in at run time
     env_file:
       - .env
+    # Build environment
+    environment:
+      - NGINX_SSL_CERT=$NGINX_SSL_CERT
+      - NGINX_SSL_CERT_KEY=$NGINX_SSL_CERT_KEY
+      - NGINX_SSL_CERT_DH=$NGINX_SSL_CERT_DH
+      - NGINX_SSL_CONF=$NGINX_SSL_CONF
 
   # Standup Python webserver layer
   flask_app:
