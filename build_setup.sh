@@ -179,7 +179,9 @@ install_linux() {
   if linux_check_if_all_packages_installed $LINUX_PACKAGES; then
     echo_em "All Linux packages already installed"
   else
-    run_sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
+    if test -f "/etc/needrestart/needrestart.conf" ; then
+      run_sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
+    fi
     run_sudo apt-get update
     run_sudo DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
   fi
