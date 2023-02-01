@@ -58,7 +58,7 @@ DNS.1 = $NAME
 EOF
 # Create the signed certificate
 openssl x509 -req -in $dir/ssl/$NAME.csr -passin pass:$ROOT_PASS -CA $dir/ssl/my_ca.pem -CAkey $dir/ssl/my_ca.key -CAcreateserial \
--out $dir/ssl/$NAME.crt -days 825 -sha256 -extfile $dir/ssl/$NAME.ext -subj "/CN=localhost/O=Astranis/OU=NetOps"
+-out $dir/ssl/$NAME.crt -days 825 -sha256 -extfile $dir/ssl/$NAME.ext
 
 echo_em "Generating Diffie Helman key"
 run_sudo openssl dhparam -out $dir/ssl/$NAME.dhparam.pem 2048
