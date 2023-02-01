@@ -55,6 +55,7 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = $NAME
+DNS.2 = $NGINX_HOSTNAME_ALT
 EOF
 # Create the signed certificate
 openssl x509 -req -in $dir/ssl/$NAME.csr -passin pass:$ROOT_PASS -CA $dir/ssl/my_ca.pem -CAkey $dir/ssl/my_ca.key -CAcreateserial \
