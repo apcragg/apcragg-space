@@ -16,12 +16,14 @@ LINUX_PACKAGES+=" python3-protobuf"
 LINUX_PACKAGES+=" apt-transport-https ca-certificates curl software-properties-common"
 # PlutoSDR Driver requirements
 LINUX_PACKAGES+=" libiio-dev libiio-utils libad9361-dev"
+# Needed for pyschopg2 library
+LINUX_PACKAGES+=" libpq-dev"
 
 # Snap package, gross, thanks Canonical
 CERTBOT_PACKAGE="certbot"
 
 # PIP Packages
-PIP3_PACKAGES=""
+PIP3_PACKAGES="coloredlogs"
 
 # Node Version
 NODE_VERSION="v18.13.0"
@@ -65,12 +67,12 @@ snap_check_if_all_packages_installed() {
 # Verify docker install by running example image
 docker_check() {
   if ! run_sudo systemctl status docker | grep "active (running)">/dev/null 2>/dev/null; then
-      echo "Docker not running properly."
+      echo_em "Docker not running properly." "@"
       exit 1
   fi
 
-  if ! run_sudo docker run hello-world | grep "Hello from Docker!" >/dev/null 2>/dev/null; then
-      echo "Docker not configured properly."
+  if ! docker run hello-world | grep "Hello from Docker!" >/dev/null 2>/dev/null; then
+      echo_em "Docker not configured properly." "@"
       exit 1
   fi
 }
@@ -78,6 +80,7 @@ docker_check() {
 # Setup docker permissions
 setup_sudoless_docker() {
   run_sudo usermod -aG docker "${USER}"
+  newgrp docker
 }
 
 install_pip_pkgs() {
@@ -118,16 +121,16 @@ install_docker() {
     run_sudo apt-get install $DOCKER_PKG --yes
     # Instlal docker compose plugin
     run_sudo apt-get install --yes docker-compose-plugin
-    docker_check
   fi
 
-
+  GROUP=docker
   if id -nG "$USER" | grep -qw "$GROUP"; then
     :
   else
     echo "$USER" does not belong to $GROUP
     setup_sudoless_docker
   fi
+  docker_check
   echo_em "Docker is setup correctly"
 }
 
@@ -139,11 +142,11 @@ install_node() {
   source "$HOME/.nvm/nvm.sh"
   source "$HOME/.profile"
   source "$HOME/.bashrc"
-  if ! command -v npm >/dev/null; then
+  if [ ! command -v npm >/dev/null ]; then
     echo_em "Installing Node.js"
     nvm install "$NODE_VERSION"
     npm update -g npm
-    exit
+    npm install --prefix ./webserver
   else
     echo_em "Node.js already installed"
   fi
@@ -176,8 +179,9 @@ install_linux() {
   if linux_check_if_all_packages_installed $LINUX_PACKAGES; then
     echo_em "All Linux packages already installed"
   else
+    run_sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
     run_sudo apt-get update
-    run_sudo ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
+    run_sudo DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
   fi
 }
 
@@ -189,6 +193,21 @@ install_certbot() {
   fi
 }
 
+install_pluto_udev() {
+  if test -f "/etc/udev/rules.d/53-adi-plutosdr-usb.rules"; then
+    echo_em "PlutoSDR udev rules already installed"
+  else
+    echo_em "Setting up PlutoSDR udev rules"
+    wget -P "${TMPDIR:=/tmp}" https://raw.githubusercontent.com/analogdevicesinc/plutosdr-fw/master/scripts/53-adi-plutosdr-usb.rules >/dev/null
+    run_sudo mv "$TMPDIR/53-adi-plutosdr-usb.rules" /etc/udev/rules.d/
+    run_sudo udevadm control --reload-rules
+    run_sudo udevadm trigger
+  fi
+}
+
+# Non interactive
+export DEBIAN_FRONTEND=noninteractive
+
 # Run install functions
 verify_not_root
 verify_not_venv
@@ -198,3 +217,4 @@ install_pip_pkgs
 install_docker
 install_nginx
 install_node
+install_pluto_udev

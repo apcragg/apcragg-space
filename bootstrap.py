@@ -8,6 +8,7 @@ import platform
 import shlex
 import shutil
 import socket
+import coloredlogs
 import subprocess
 from typing import Callable, Iterable, Sequence, Union
 
@@ -23,6 +24,13 @@ BOOTSTRAP_ARTIFACTS_FOLDER = VENV_DIR / "bootstrap_artifacts"
 REQUIREMENTS_FILES = ["requirements.txt", "requirements-dev.txt"]
 BOOTSTRAP_ARTIFACT_FILE_NAMES = REQUIREMENTS_FILES + ["setup.py", "bootstrap.py"]
 
+# Nice colors
+coloredlogs.DEFAULT_FIELD_STYLES["levelname"] = {  # type: ignore
+    "color": 8,
+    "bold": True,
+}
+coloredlogs.install(fmt="%(asctime)s [%(filename)s] [%(levelname)s] %(message)s")
+
 
 def log_banner(
     msg: str,
@@ -30,6 +38,7 @@ def log_banner(
     line_ch: str = "-",
     split_lines: bool = True,
 ) -> None:
+    """Pretty prints a message in banner"""
     logger(line_ch * 60)
     if split_lines:
         lines = msg.split("\n")
@@ -57,6 +66,7 @@ def copy_definition_files() -> None:
 
 
 def compare_artifact_files(files: Iterable[str]) -> bool:
+    """Compares files to stored artifacts and returns False if they aren't equal"""
     for file_name in files:
         source_file_path = REPO_ROOT / file_name
         if source_file_path.exists():
@@ -93,7 +103,7 @@ def check_bootstrap_state() -> bool:
 def run_shell_command(
     cmd: Sequence[Union[str, pathlib.Path]],
     *,
-    suppress_warning: bool = False,
+    suppress_info: bool = False,
     raise_err: bool = False,
     cwd: Union[str, pathlib.Path] = REPO_ROOT,
     **spr_kwargs,
@@ -105,9 +115,9 @@ def run_shell_command(
 
     result = subprocess.run(cmd, check=raise_err, cwd=str(cwd), **spr_kwargs)
     rc = result.returncode
-    if not suppress_warning:
+    if not suppress_info:
         if rc:
-            logging.warning(
+            logging.info(
                 f"Received non-zero return code ({rc}) from " f"{printable_cmd(cmd)}"
             )
     return rc
@@ -172,7 +182,7 @@ if __name__ == "__main__":
     full = args.full
 
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.info,
         format="[BOOTSTRAP] [{levelname}] {message}",
         style="{",
     )

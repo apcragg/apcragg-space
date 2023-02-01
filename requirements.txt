@@ -10,3 +10,4 @@ pyadi-iio==0.0.14
 matplotlib==3.6.3
 scipy==1.10.0
 python-dotenv==0.21.1
+psycopg2==2.9.5

@@ -54,13 +54,17 @@ end_running_container() {
 # ============================================================================
 # Run commands to start application
 # ============================================================================
+echo_em "Setting up environment"
+echo "Looking for PlutoSDR"
+find_pluto
 
 echo_em "Ending running containers"
 end_running_container
 
-echo_em "Setting up environment"
-echo "Looking for PlutoSDR"
-find_pluto
+echo_em "Build Frontend Bundle"
+# Print output if build command has error
+output="$(npm install --prefix ./webserver) 2>&1" || echo "$output"
+output="$(npm run build --prefix ./webserver) 2>&1" || echo "$output"
 
 echo_em "Building Frontend and Backend Containers"
 # Print output if build command has error
