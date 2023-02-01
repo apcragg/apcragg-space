@@ -3,4 +3,3 @@ flake8
 coloredlogs
 setuptools
 wheel
-

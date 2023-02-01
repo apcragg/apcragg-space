@@ -1,15 +1,12 @@
 import adi
 import numpy as np
+import os
 import redis
 import pickle
 from typing import List, Optional
 import time
 
 N_THREADS = 1
-
-
-def find_sdr():
-    return "usb:1.3.5"
 
 
 def setup_sdr(uri: str):
@@ -25,7 +22,8 @@ def capture(sdr: adi.Pluto, freq: Optional[float] = None):
 
 
 def main():
-    sdr_uri = find_sdr()
+    sdr_uri = os.environ.get("PLUTO_URI", "")
+    print(sdr_uri)
     sdr = setup_sdr(uri=sdr_uri)
     sdr.rx_buffer_size = 1024 * 8
     sdr.sample_rate = int(30.72e6)

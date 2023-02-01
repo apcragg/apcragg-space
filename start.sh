@@ -74,4 +74,4 @@ echo_em "Environment Settings"
 cat .env
 
 echo_em "Deploying Containers"
-docker compose up -d
+docker compose up
