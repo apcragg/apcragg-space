@@ -10,7 +10,7 @@ LINUX_PACKAGES="lsb-release"
 # Packages to install on Linux.
 LINUX_PACKAGES+=" build-essential clang-format libusb-dev cmake libtool automake pkg-config"
 # Get important python packages
-LINUX_PACKAGES+=" python3 python3-pip python3-venv python3-tk"
+LINUX_PACKAGES+=" python3 python3-pip python3-venv python3-tk python3-dev python-is-python3"
 LINUX_PACKAGES+=" python3-protobuf"
 # Docker prerequisites
 LINUX_PACKAGES+=" apt-transport-https ca-certificates curl software-properties-common"
@@ -23,7 +23,7 @@ LINUX_PACKAGES+=" libpq-dev"
 CERTBOT_PACKAGE="certbot"
 
 # PIP Packages
-PIP3_PACKAGES="coloredlogs"
+PIP3_PACKAGES=" coloredlogs wheel"
 
 # Node Version
 NODE_VERSION="v18.13.0"
@@ -89,7 +89,7 @@ install_pip_pkgs() {
     exit 1
   fi
   if [[ ${#PIP3_PACKAGES} -gt 0 ]]; then
-    pip3 install --quiet --user "${PIP3_PACKAGES}"
+    pip3 install --quiet --user ${PIP3_PACKAGES}
   fi
 }
 
@@ -139,10 +139,10 @@ install_node() {
   if  ! test -d "$HOME/.nvm/"; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
   fi
-  source "$HOME/.nvm/nvm.sh"
-  source "$HOME/.profile"
-  source "$HOME/.bashrc"
-  if [ ! command -v npm >/dev/null ]; then
+  . "$HOME/.nvm/nvm.sh"
+  . "$HOME/.profile"
+  . "$HOME/.bashrc"
+  if ! command -v npm &>/dev/null ; then
     echo_em "Installing Node.js"
     nvm install "$NODE_VERSION"
     npm update -g npm

@@ -139,15 +139,6 @@ def install_py_deps() -> None:
 
     subprocess.run(init_venv_cmd)
 
-    logging.info("Installing python requirements")
-    status = run_shell_command(
-        [VENV_PYTHON, "-m", "pip", "install", "-r", PY_REQUIREMENTS], cwd=VENV_DIR
-    )
-    print(status)
-    if status:
-        log_banner("Failed to install python requirements", logging.critical, "@")
-        exit(status)
-
     logging.info("Installing python development requirements")
     status = run_shell_command(
         [VENV_PYTHON, "-m", "pip", "install", "-r", PY_REQUIREMENTS_DEV], cwd=VENV_DIR
@@ -159,7 +150,16 @@ def install_py_deps() -> None:
         )
         exit(status)
 
-    logging.info("Succesfully installed all python requirements")
+    logging.info("Installing python requirements")
+    status = run_shell_command(
+        [VENV_PYTHON, "-m", "pip", "install", "-r", PY_REQUIREMENTS], cwd=VENV_DIR
+    )
+    print(status)
+    if status:
+        log_banner("Failed to install python requirements", logging.critical, "@")
+        exit(status)
+
+        logging.info("Succesfully installed all python requirements")
 
 
 if __name__ == "__main__":

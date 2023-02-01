@@ -11,3 +11,4 @@ matplotlib==3.6.3
 scipy==1.10.0
 python-dotenv==0.21.1
 psycopg2==2.9.5
+setuptools>=65.5.1,<66

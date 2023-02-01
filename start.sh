@@ -28,7 +28,7 @@ echo_em() {
 }
 
 find_pluto() {
-  PLUTO_URI=$(iio_info -S | sed -rEn 's/^.*\[(usb.*)]/\1/p')
+  PLUTO_URI=$(iio_info -s | sed -rEn 's/^.*\[(usb.*)]/\1/p')
   export PLUTO_URI
   if [[ ${#PLUTO_URI} -gt 0 ]]; then
     echo "Found PlutoSDR at '$PLUTO_URI'"
