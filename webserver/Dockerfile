@@ -1,8 +1,8 @@
 FROM nginx:1.23.3
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./default.conf.template /etc/nginx/templates/default.conf.template
-COPY ./default-nossl.conf.template /etc/nginx/templates/default-nossl.conf.template
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY ./nginx/default-nossl.conf.template /etc/nginx/templates/default-nossl.conf.template
 COPY ./dist/ /usr/share/nginx/default/
 COPY ./ssl /ssl/
 

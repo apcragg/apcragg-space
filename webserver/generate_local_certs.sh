@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo_em() {
   if [ -z "$2" ] ; then
     CHAR="-"
