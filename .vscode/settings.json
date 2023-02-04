@@ -45,5 +45,8 @@
     "python.analysis.extraPaths": [
         "/usr/local/lib/python3.10/dist-packages/"
     ],
+    "cSpell.words": [
+        "psycopg"
+    ],
 
 }

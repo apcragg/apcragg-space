@@ -22,7 +22,7 @@ PY_REQUIREMENTS = REPO_ROOT / "requirements.txt"
 PY_REQUIREMENTS_DEV = REPO_ROOT / "requirements-dev.txt"
 BOOTSTRAP_ARTIFACTS_FOLDER = VENV_DIR / "bootstrap_artifacts"
 REQUIREMENTS_FILES = ["requirements.txt", "requirements-dev.txt"]
-BOOTSTRAP_ARTIFACT_FILE_NAMES = REQUIREMENTS_FILES + ["setup.py", "bootstrap.py"]
+BOOTSTRAP_ARTIFACT_FILE_NAMES = REQUIREMENTS_FILES + ["bootstrap.py"]
 
 # Nice colors
 coloredlogs.DEFAULT_FIELD_STYLES["levelname"] = {  # type: ignore
@@ -39,14 +39,14 @@ def log_banner(
     split_lines: bool = True,
 ) -> None:
     """Pretty prints a message in banner"""
-    logger(line_ch * 60)
+    logger(line_ch * 120)
     if split_lines:
         lines = msg.split("\n")
         for line in lines:
             logger(line)
     else:
         logger(msg)
-    logger(line_ch * 60)
+    logger(line_ch * 120)
 
 
 def printable_cmd(cmd: Sequence[Union[str, pathlib.Path]]) -> str:

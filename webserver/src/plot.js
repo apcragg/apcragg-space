@@ -6,8 +6,8 @@ function load_plot(plot_id) {
     var plot_options = {
         autohide_panbars: true,
         hide_note: false,
-        ymin:10,
-        ymax:-50,
+        ymin:-10,
+        ymax:60,
         xlabel: "Time",
         legend: true,
     };

@@ -45,7 +45,7 @@ def get_cpu_usage() -> flask.Response:
 def get_sdr_spectrum() -> flask.Response:
     """Returns SDR Spectrum as a list of magnitudes"""
     n = request.args.get("n", default=1, type=int)
-    data = get_pluto_spectrum(n)
+    data = get_db_spectrum(n)
     return flask.jsonify({"spectrum": data})
 
 
@@ -66,13 +66,35 @@ def hello():
     return (
         "<h1 style='color:blue'>Hello There! If you're seeing this,"
         "the nginx proxy is not properly configured to serve the static"
-        "folder.</h1>"
+        "folder and is instead forwarding all traffic to the Flask backend</h1>"
     )
 
 
 @app.route("/codenames/api/", methods=["GET", "POST"])
 def codenames():
     return ""
+
+
+def get_db_spectrum(n):
+    spectrum = []
+
+    key = [
+        "GWL_RTN_WIDE",
+        "C_FWD_WIDE",
+        "D_FWD_WIDE",
+        "E_FWD_WIDE",
+        "F_FWD_WIDE",
+        "F_FWD_WIDE",
+    ]
+
+    for itr in range(n):
+        db_data = get_redis().get(key[itr])
+        if db_data:
+            data = np.array(pickle.loads(db_data)["value"]) + 120
+            spectrum.append(data.tolist())
+        else:
+            spectrum.append([0, 0, 0])
+    return spectrum
 
 
 def get_pluto_spectrum(n):

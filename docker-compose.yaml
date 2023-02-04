@@ -50,11 +50,24 @@ services:
     build: ./services/pluto
     devices:
       - /dev/bus/usb/ # TODO: Should we template this and find only the device we need?
+    depends_on:
+      redis:
+        condition: service_started
     # Passed in at run time
     env_file:
       - .env
     environment:
       - PLUTO_URI=$PLUTO_URI
+
+  # Start DB Service
+  history-reader:
+    build: ./services/history-reader
+    depends_on:
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+      - ./services/history-reader/.ts_creds
 
   # Start Reids
   redis:

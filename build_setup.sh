@@ -34,10 +34,10 @@ echo_em() {
   else
     CHAR=$2
   fi
-  printf -- "$CHAR%.0s" {1..80}
+  printf -- "$CHAR%.0s" {1..120}
   echo ""
   echo "$1"
-  printf -- "$CHAR%.0s" {1..80}
+  printf -- "$CHAR%.0s" {1..120}
   echo ""
 }
 
@@ -183,7 +183,7 @@ install_linux() {
       run_sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
     fi
     run_sudo apt-get update
-    run_sudo DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
+    run_sudo ACCEPT_EULA=Y apt-get --yes install $LINUX_PACKAGES
   fi
 }
 
